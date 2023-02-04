@@ -33,4 +33,4 @@ parts:
       snapcraftctl set-version "$WINE_VER"
 
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/opt
-      (cd ${SNAPCRAFT_PART_INSTALL}/opt ; wget -q wget -q "https://github.com/GloriousEggroll/wine-ge-custom/releases/download/7.0-GE-5-LoL/wine-lutris-ge-lol-7.0-5-x86_64.tar.xz" ; tar -xf *.tar.xz ; mv lutris* wine-staging ; rm *.tar.xz )
+      (cd ${SNAPCRAFT_PART_INSTALL}/opt ; wget -q "https://github.com/GloriousEggroll/wine-ge-custom/releases/download/7.0-GE-5-LoL/wine-lutris-ge-lol-7.0-5-x86_64.tar.xz" ; tar -xf *.tar.xz ; mv lutris* wine-staging ; rm *.tar.xz )
