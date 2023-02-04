@@ -27,40 +27,10 @@ parts:
     override-build: |
       snapcraftctl build
 
-      ARCH="$(dpkg --print-architecture)"
-      WINE_VER="$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/ | grep wine-staging | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)"
+      WINE_VER="7.0-5"
 
       # set snap version
       snapcraftctl set-version "$WINE_VER"
 
-      # wget and dpkg extract the wine debs
-      ## supporting binaries which are arch-specific but the same filenames in both architectures so we only install the native architecture
-      DEB_URLS="https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-${ARCH}/wine-staging_${WINE_VER}~focal-1_${ARCH}.deb"
-
-      ## wine loaders - this one is the native system architecture
-      DEB_URLS="$DEB_URLS https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-${ARCH}/wine-staging-${ARCH}_${WINE_VER}~focal-1_${ARCH}.deb"
-
-      if [ "$ARCH" = "amd64" ]; then
-        ## on amd64 builds we need to also bundle the i386 wine loaders
-        DEB_URLS="$DEB_URLS https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/wine-staging-i386_${WINE_VER}~focal-1_i386.deb"
-      fi
-
-      for DEB_URL in ${DEB_URLS}; do
-        DEB=$(basename "${DEB_URL}")
-        echo "Downloading ${DEB_URL}..."
-        wget --quiet "${DEB_URL}" -O "${SNAPCRAFT_PART_INSTALL}/${DEB}"
-        echo "Unpacking ${DEB}..."
-        dpkg -x "${SNAPCRAFT_PART_INSTALL}/${DEB}" ${SNAPCRAFT_PART_INSTALL}
-        rm -f "${SNAPCRAFT_PART_INSTALL}/${DEB}"
-      done
-
-      # Cleanup
-      rm -rf ${SNAPCRAFT_PART_INSTALL}/opt/wine-staging/share/applications
-      rm -rf ${SNAPCRAFT_PART_INSTALL}/opt/wine-staging/share/man
-      rm -rf ${SNAPCRAFT_PART_INSTALL}/usr
-
-      # Disable winemenubuilder
-      sed -i 's/winemenubuilder.exe -a -r/winemenubuilder.exe -r/g' "${SNAPCRAFT_PART_INSTALL}"/opt/wine-staging/share/wine/wine.inf
-
-      # add nlpfile
-      touch "${SNAPCRAFT_PART_INSTALL}"/opt/wine-staging/bin/nlpfile
+      mkdir -p ${SNAPCRAFT_PART_INSTALL}/opt
+      (cd ${SNAPCRAFT_PART_INSTALL}/opt ; wget -q wget -q "https://github.com/GloriousEggroll/wine-ge-custom/releases/download/7.0-GE-5-LoL/wine-lutris-ge-lol-7.0-5-x86_64.tar.xz" ; tar -xf *.tar.xz ; mv lutris* wine-staging ; rm *.tar.xz )
