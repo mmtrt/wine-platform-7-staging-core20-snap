@@ -27,10 +27,10 @@ parts:
     override-build: |
       snapcraftctl build
 
-      WINE_VER="7.0.8"
+      WINE_VER="7.0.9.0"
 
       # set snap version
       snapcraftctl set-version "$WINE_VER"
 
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/opt
-      (cd ${SNAPCRAFT_PART_INSTALL}/opt ; wget -q "https://github.com/GloriousEggroll/wine-ge-custom/releases/download/7.0-GE-8-LoL/wine-lutris-ge-lol-7.0.8-x86_64.tar.xz" ; tar -xf *.tar.xz ; mv lutris* wine-staging ; rm *.tar.xz )
+      (cd ${SNAPCRAFT_PART_INSTALL}/opt ; wget -q "https://github.com/NelloKudo/WineBuilder/releases/download/wine-lol-9.0-rc1/wine-LoL-9.0-rc1-staging-amd64.tar.xz" ; tar -xf *.tar.xz ; rm *.tar.xz ; mv wine-LoL* wine-staging )
